@@ -52,9 +52,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SSTest\SSTest.csproj">
+    <ProjectReference Include="..\SSTest\WAAPI.NewSearchService.csproj">
       <Project>{B74FE2D1-0689-4539-9ACB-7B1094D9FEEC}</Project>
-      <Name>SSTest</Name>
+      <Name>WAAPI.NewSearchService</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />

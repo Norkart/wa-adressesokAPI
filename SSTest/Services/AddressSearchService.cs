@@ -1,8 +1,11 @@
-﻿using ServiceStack;
+﻿using System;
+using ServiceStack;
 using SSTest.Requests;
 using Newtonsoft.Json.Linq;
 using System.Net;
 using System.IO;
+using System.Text.RegularExpressions;
+using SSTest.Models;
 
 namespace SSTest.Services
 {
@@ -11,20 +14,41 @@ namespace SSTest.Services
         //TODO: move to config
         private const string ElasticSearchUrl = "http://192.168.46.199:9202/adresser/_search";
 
-        private static string GetAddressElQuery(string query)
+        private static string GetAddressElQuery(string query, int limit=7)
         {
-            var obj = new JObject(
-                new JProperty("size", 7),
-                new JProperty("query", new JObject(                    
-                    new JProperty("match", new JObject(
-                        new JProperty("full_gate_adresse.edgegram", new JObject(
-                            new JProperty("query", query)
-                        ))
-                    ))
-                ))
-            );
-
-            return obj.ToString();
+            var number = Regex.Match(query, @"\d+$").Value;
+            string queryJson;
+            if (!number.IsNullOrEmpty())
+            {
+                queryJson = @"
+                {{
+                    ""size"" : {0},
+                    ""query"": {{
+                        ""bool"": {{
+                            ""should"" : [
+                                {{""match"": {{""husnummer"": {{""query"": {1} }}}}}},
+                                {{""match"": {{""full_gate_adresse.edgegram"": {{""query"": ""{2}"" }}}}}},
+                                {{""match"": {{""gatenavn.vei"": {{""query"": ""{3}"" }}}}}}
+                            ]
+                        }}
+                    }}
+                }}";
+                return String.Format(queryJson, limit, number, query, query);
+            }
+            
+            queryJson = @"
+            {{
+                ""size"" : {0},
+                ""query"": {{
+                    ""bool"": {{
+                        ""should"" : [
+                            {{""match"": {{""full_gate_adresse.edgegram"": {{""query"": ""{1}"" }}}}}},
+                            {{""match"": {{""gatenavn.vei"": {{""query"": ""{2}"" }}}}}}
+                        ]
+                    }}
+                }}
+            }}";
+            return String.Format(queryJson, limit, query, query);
         }
 
         private string QueryElasticSearch(string elQuery)
