@@ -1,21 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using ServiceStack;
+﻿using ServiceStack;
 using SSTest.Requests;
 using Newtonsoft.Json.Linq;
 using System.Net;
 using System.IO;
 
-namespace SSTest
+namespace SSTest.Services
 {
     public class AddressSearchService : Service
     {
         //TODO: move to config
-        private static string elasticSearchUrl = "http://192.168.46.199:9202/adresser/_search";
+        private const string ElasticSearchUrl = "http://192.168.46.199:9202/adresser/_search";
 
-        private string GetAddressElQuery(string query)
+        private static string GetAddressElQuery(string query)
         {
             var obj = new JObject(
                 new JProperty("size", 7),
@@ -33,7 +29,7 @@ namespace SSTest
 
         private string QueryElasticSearch(string elQuery)
         {
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create(elasticSearchUrl);
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(ElasticSearchUrl);
             httpWebRequest.ContentType = "application/json; charset=utf-8";
             httpWebRequest.Method = "POST";
             httpWebRequest.Accept = "application/json; charset=utf-8";
@@ -48,7 +44,7 @@ namespace SSTest
                 using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
                 {
                     var result = streamReader.ReadToEnd();
-                    return result.ToString();
+                    return result;
                 }
             }
         }
@@ -56,7 +52,7 @@ namespace SSTest
 
         public object Get(AddressSearch request)
         {
-            var value = base.Request.QueryString["query"];
+            var value = Request.QueryString["query"];
             if (value == null)
             {
                 return HttpError.NotFound("Not found");

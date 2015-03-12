@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 
-namespace SSTest
+namespace SSTest.Models
 {
     public class ElasticSearchResponse
     {
@@ -28,13 +25,13 @@ namespace SSTest
                     Kommuneidstr = hit._source.kommuneidstr,
                     Husnummer = hit._source.husnummer,
                     Fylkenavn = hit._source.fylkenavn,
-                    Adresse_type = hit._source.adresse_type,
-                    Gate_id = hit._source.gate_id,
+                    AdresseType = hit._source.adresse_type,
+                    GateId = hit._source.gate_id,
                     Fylkenr = hit._source.fylkenr,
                     Poststed = hit._source.poststed,
                     Gatenavn = hit._source.gatenavn,
                     Kommunenavn = hit._source.kommunenavn,
-                    Adresse_id = hit._source.adresse_id,
+                    AdresseId = hit._source.adresse_id,
                     Alternativtnavn = hit._source.alternativtnavn,
                     Koordinatkvalitetkode = hit._source.koordinatkvalitetkode,
                     Kortnavn = hit._source.kortnavn,
